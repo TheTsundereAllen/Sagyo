@@ -11,6 +11,8 @@ public class Sagyo {
 
     private boolean started;
 
+    private SagyoFactoryDistributor distributor；
+        
     public Sagyo() {
         this(false);
     }
@@ -19,16 +21,16 @@ public class Sagyo {
         this.async = async;
         this.asyncThread = async ? Executors.newCachedThreadPool() : null;
         this.started = false;
+        this.distributor = new SagyoFactoryDistributor();
     }
 
     public void start() {
         if (!this.started) {
-            Runnable runnable = new SagyoFactoryDistributor();
 
             if (this.async && this.asyncThread != null) {
-                this.asyncThread.execute(runnable);
+                this.asyncThread.execute(this.distributor);
             } else {
-                runnable.run();
+                this.distributor.run();
             }
             this.started = true;
         }
